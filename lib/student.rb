@@ -25,18 +25,17 @@ class Student
   end
   
   def save
-    sql_select = <<-SQL
-      SELECT * FROM students
-    SQL
+    sql_select = "SELECT * FROM students"
     sql_update = "UPDATE students SET name = #{self.name} WHERE id = #{self.id}"
+    sql_insert = "INSERT INTO students(name, grade) VALUES(?,?)"
     rows = DB[:conn].execute(sql_select)
-    rows.each {|row| if 
+    rows.each {|row|
+      if row[0] = self.id
+        DB[:conn].execute(sql_update)
+      end
+              }
+      
     
-    
-    sql_1 = <<-SQL
-      INSERT INTO students(name, grade)
-                    VALUES(?,?)
-    SQL
     DB[:conn].execute(sql_1, self.name, self.grade)
     @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
     
