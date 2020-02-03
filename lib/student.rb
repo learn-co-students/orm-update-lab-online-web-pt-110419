@@ -28,11 +28,8 @@ class Student
     sql_select = <<-SQL
       SELECT * FROM students
     SQL
-    
-    sql_update = "UPDATE students WHERE "
-      
-    
-    rows = DB[:conn].execute(sql)
+    sql_update = "UPDATE students SET name = #{self.name} WHERE id = #{self.id}"
+    rows = DB[:conn].execute(sql_select)
     rows.each {|row| if 
     
     
