@@ -1,7 +1,6 @@
 require_relative "../config/environment.rb"
 
 class Student
-  
   attr_accessor :name, :grade
   attr_reader :id
   @@all = []
@@ -45,10 +44,12 @@ class Student
     self
   end
       
-  def self.create(name:, grade:)
-    new_student = Student.new(name, grade)
-    new_student.save
-    new_student
+  def self.create(name, grade)
+    (Student.new(name, grade)).save
+  end
+  
+  def self.new_from_db(arr)
+    Student.new(arr[1], arr[2])
   end
   
   
