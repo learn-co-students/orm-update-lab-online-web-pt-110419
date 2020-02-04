@@ -4,6 +4,11 @@ class Student
   
   attr_accessor :name, :grade
   attr_reader :id
+  @@all = []
+  
+  def self.all
+    @@all
+  end
   
   def initialize(name, grade, id = nil)
     @name = name
@@ -25,22 +30,20 @@ class Student
   end
   
   def save
+    sql_insert = "INSERT INTO students(name, grade) VALUES(?,?)"
     sql_select = "SELECT * FROM students"
     sql_update = "UPDATE students SET name = #{self.name} WHERE id = #{self.id}"
-    sql_insert = "INSERT INTO students(name, grade) VALUES(?,?)"
-    rows = DB[:conn].execute(sql_select)
-    rows.each {|row|
-      if row[0] = self.id
-        DB[:conn].execute(sql_update)
-      end
-              }
-      
     
-    DB[:conn].execute(sql_1, self.name, self.grade)
-    @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
+    if self.id !=nil # If id not nil - we know object has already been persisted
+      DB[:conn].execute(sql_update)
+    end
     
+    if self.id == nil
+       DB[:conn].execute(sql_insert, self.name, self.grade)
+       @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
+    end
   end
-  
+      
   def self.create(name:, grade:)
     new_student = Student.new(name, grade)
     new_student.save
